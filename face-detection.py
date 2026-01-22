@@ -78,10 +78,18 @@ def main():
     min_n=st.slider('choose min Neighbors value',min_value=1,max_value=5,value=2,step=1)
     scaleF=st.slider('choose scale factor value',min_value=0.5,max_value=2.,value=1.1,step=0.1)
 
-    with st.container(border=True,horizontal=True):
+    with st.container(border=True,horizontal=True,horizontal_alignment='distribute'):
+
+        if 'cam' not in st.session_state:
+            st.session_state.cam=True
+
 
         cam=st.button('start the experience !')
-        save=st.button('press to save the frame image')
+        save=st.button('press to save the frame image',disabled=st.session_state.cam)
+       
+        if 'cam' in st.session_state:
+            st.session_state.cam=False
+
 
         if cam :
             detection((B,G,R),min_n,scaleF,save,0)
