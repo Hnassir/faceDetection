@@ -10,7 +10,7 @@ def detection(colors,minneighbors,scaleFactor,save):
     #videocapture class open the camera
     cap=cv.VideoCapture(0) # cap is our webcam object
 
-    image_placeholder=st.empty()
+    #image_placeholder=st.empty()
 
     i=1
 
@@ -42,7 +42,8 @@ def detection(colors,minneighbors,scaleFactor,save):
         rgb_frame=cv.cvtColor(frame,cv.COLOR_BGR2RGB)
 
         #using a placeholder to show the webcam's window
-        image_placeholder.image(rgb_frame)
+        #image_placeholder.image(rgb_frame)
+        cv.imshow('Face Detection using Viola-Jones Algorithm', frame)
 
         
         if cv.waitKey(10) & 0xFF == ord('q') :
