@@ -1,13 +1,11 @@
 import streamlit as st
 import cv2 as cv
+import time
 #from datetime import datetime
 
-x=True
 
 
-def detection(colors,minneighbors,scaleFactor,save):
-        
-    global x
+def detection(colors,minneighbors,scaleFactor,save,i):
 
     #model of face detection
     cascade=cv.CascadeClassifier(cv.data.haarcascades + 'haarcascade_frontalface_default.xml')
@@ -16,10 +14,6 @@ def detection(colors,minneighbors,scaleFactor,save):
     cap=cv.VideoCapture(0) # cap is our webcam object
 
     image_placeholder=st.empty()
-
-    if x:
-        i=0
-        x=False
 
 
     while True:
@@ -42,23 +36,20 @@ def detection(colors,minneighbors,scaleFactor,save):
         #2- timestamp !!
             
         if save :
-            #i=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             save=False
-            i+=1
-            st.write(i)
             cv.imwrite(f'saved_image_{i}.jpg',frame)
-            st.success(f"Image saved successfully!")
-
+            text=st.success(f"Image saved successfully!")
+            time.sleep(3)
+            text.empty()
 
         #we switch image color
         rgb_frame=cv.cvtColor(frame,cv.COLOR_BGR2RGB)
 
         #using a placeholder to show the webcam's window
         image_placeholder.image(rgb_frame)
-
-        #|
         
-        if cv.waitKey(1) & 0x0D == ord('q') :
+        if cv.waitKey(1) & 0xFF == ord('q') :
+            image_placeholder.empty()
             break
 
     cap.release()
@@ -68,7 +59,8 @@ def detection(colors,minneighbors,scaleFactor,save):
 
 def main():
 
-    index=False
+    if 'count' not in st.session_state:
+        st.session_state.count=0
 
     st.title('Face detection tool ')
     st.write("Press the button below to start detecting faces from your webcam")
@@ -87,16 +79,17 @@ def main():
     scaleF=st.slider('choose scale factor value',min_value=0.5,max_value=2.,value=1.1,step=0.1)
 
     with st.container(border=True,horizontal=True):
-            
+
         cam=st.button('start the experience !')
         save=st.button('press to save the frame image')
 
         if cam :
-            detection((B,G,R),min_n,scaleF,save)
-            index=True
-        if save :
-            detection((B,G,R),min_n,scaleF,save)
+            detection((B,G,R),min_n,scaleF,save,0)
 
+        if save :
+            if 'count' in st.session_state:
+                st.session_state.count+=1
+            detection((B,G,R),min_n,scaleF,save,st.session_state.count)
 
 
 if __name__=='__main__' :
