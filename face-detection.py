@@ -53,7 +53,7 @@ def detection(colors,minneighbors,scaleFactor,save,i):
             break
 
     cap.release()
-    #cv.destroyAllWindows()
+    cv.destroyAllWindows()
 
 
 
